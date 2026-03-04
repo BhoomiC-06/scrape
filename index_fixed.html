@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrapeFlow - Professional Web Scraper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1f2937;
+            --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-2xl: 20px;
+            --radius-3xl: 24px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --border: #334155;
+            --border-light: #475569;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-2xl: 20px;
+            --radius-3xl: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .url-section {
+            background: var(--bg-glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            margin: 48px 0;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-xl);
+            font-size: 18px;
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+        }
+
+        .scrape-btn {
+            width: 100%;
+            padding: 20px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scrape-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .results-section {
+            background: var(--bg-glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            margin: 24px 0;
+            backdrop-filter: blur(20px);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .tab-content {
+            min-height: 200px;
+        }
+
+        .history-section {
+            background: var(--bg-glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            margin: 24px 0;
+            backdrop-filter: blur(20px);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .url-section {
+                padding: 24px;
+            }
+            
+            .url-input {
+                font-size: 16px;
+                padding: 16px;
+            }
+            
+            .scrape-btn {
+                font-size: 16px;
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>ScrapeFlow</h1>
+            <p>Professional Web Scraping Tool</p>
+        </div>
+        
+        <div class="url-section">
+            <input 
+                type="url" 
+                class="url-input" 
+                id="urlInput" 
+                placeholder="https://example.com"
+                autocomplete="off"
+            >
+            <button class="scrape-btn" id="scrapeBtn" onclick="startScrape()">
+                Scrape Now
+            </button>
+        </div>
+        
+        <div class="results-section" id="resultsSection">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('text')">📄 Text</button>
+                <button class="tab" onclick="switchTab('links')">🔗 Links</button>
+                <button class="tab" onclick="switchTab('images')">🖼 Images</button>
+                <button class="tab" onclick="switchTab('meta')">🏷 Meta</button>
+            </div>
+            
+            <div class="tab-content active" id="textTab">
+                <div id="textContent"></div>
+            </div>
+            
+            <div class="tab-content" id="linksTab">
+                <div id="linksContent"></div>
+            </div>
+            
+            <div class="tab-content" id="imagesTab">
+                <div id="imagesContent"></div>
+            </div>
+            
+            <div class="tab-content" id="metaTab">
+                <div id="metaContent"></div>
+            </div>
+        </div>
+        
+        <div class="history-section" id="historySection">
+            <div class="section-header">
+                <h2>📜 Scraping History</h2>
+                <p>View and manage your previous scraping results</p>
+            </div>
+            
+            <div class="history-list" id="historyList">
+                <div class="history-empty">
+                    <div class="empty-icon">📋</div>
+                    <p>No scraping history yet. Start scraping to see your results here!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:5000';
+        let currentResult = null;
+        let scrapingHistory = [];
+
+        // DOM elements
+        const urlInput = document.getElementById('urlInput');
+        const scrapeBtn = document.getElementById('scrapeBtn');
+        const textContent = document.getElementById('textContent');
+        const linksContent = document.getElementById('linksContent');
+        const imagesContent = document.getElementById('imagesContent');
+        const metaContent = document.getElementById('metaContent');
+        const historyList = document.getElementById('historyList');
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // Main scraping function
+        async function startScrape() {
+            let url = urlInput.value.trim();
+            if (!url) return;
+            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+            // Show loading state
+            scrapeBtn.disabled = true;
+            scrapeBtn.textContent = 'Scraping...';
+            
+            try {
+                const response = await fetch(API + '/scrape', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: url })
+                });
+
+                if (!response.ok) throw new Error('Scraping failed');
+                
+                const result = await response.json();
+                
+                if (!result.ok) {
+                    throw new Error(result.error || 'Scraping failed');
+                }
+                
+                currentResult = result.data;
+                
+                // Add to history
+                addToHistory(result.data);
+                
+                // Display results
+                displayResults(result.data);
+                
+            } catch (error) {
+                console.error('Scraping error:', error);
+                showError('Failed to scrape: ' + error.message);
+            } finally {
+                scrapeBtn.disabled = false;
+                scrapeBtn.textContent = 'Scrape Now';
+            }
+        }
+
+        // Display results
+        function displayResults(data) {
+            // Show results section
+            document.getElementById('resultsSection').classList.add('show');
+            
+            // Display text content
+            textContent.innerHTML = `<pre>${data.text || 'No text content found'}</pre>`;
+            
+            // Display links
+            if (data.links && data.links.length > 0) {
+                linksContent.innerHTML = data.links.map(link => 
+                    `<div style="margin-bottom: 12px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                        <strong><a href="${link.url}" target="_blank" style="color: var(--primary);">${link.text}</a></strong>
+                    </div>`
+                ).join('');
+            } else {
+                linksContent.innerHTML = '<p style="color: var(--text-secondary);">No links found</p>';
+            }
+            
+            // Display images
+            if (data.images && data.images.length > 0) {
+                imagesContent.innerHTML = data.images.map(img => 
+                    `<div style="margin-bottom: 12px; text-align: center;">
+                        <img src="${img.src}" alt="${img.alt}" style="max-width: 100px; border-radius: var(--radius-md);">
+                        <p style="font-size: 12px; color: var(--text-secondary);">${img.alt || 'Image'}</p>
+                    </div>`
+                ).join('');
+            } else {
+                imagesContent.innerHTML = '<p style="color: var(--text-secondary);">No images found</p>';
+            }
+            
+            // Display meta
+            if (data.meta) {
+                metaContent.innerHTML = Object.entries(data.meta).map(([key, value]) => 
+                    `<div style="margin-bottom: 8px;">
+                        <strong style="color: var(--text-primary);">${key}:</strong> 
+                        <span style="color: var(--text-secondary);">${value || 'N/A'}</span>
+                    </div>`
+                ).join('');
+            } else {
+                metaContent.innerHTML = '<p style="color: var(--text-secondary);">No meta information found</p>';
+            }
+        }
+
+        // Add to history
+        function addToHistory(data) {
+            const historyItem = {
+                ...data,
+                timestamp: new Date().toISOString()
+            };
+            
+            scrapingHistory.unshift(historyItem);
+            updateHistoryDisplay();
+            
+            // Save to localStorage
+            localStorage.setItem('scrapingHistory', JSON.stringify(scrapingHistory.slice(0, 10)));
+        }
+
+        // Update history display
+        function updateHistoryDisplay() {
+            if (scrapingHistory.length === 0) {
+                historyList.innerHTML = `
+                    <div class="history-empty">
+                        <div class="empty-icon">📋</div>
+                        <p>No scraping history yet. Start scraping to see your results here!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            historyList.innerHTML = scrapingHistory.map((item, index) => `
+                <div style="margin-bottom: 16px; padding: 16px; background: var(--bg-secondary); border-radius: var(--radius-md); cursor: pointer;" onclick="loadFromHistory(${index})">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <strong style="color: var(--text-primary);">${item.title || 'No title'}</strong>
+                        <small style="color: var(--text-tertiary);">${new Date(item.timestamp).toLocaleString()}</small>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">${item.url}</p>
+                    <div style="display: flex; gap: 8px;">
+                        <span style="background: var(--gradient-primary); color: white; padding: 4px 8px; border-radius: var(--radius-sm); font-size: 12px;">
+                            ${item.method === 'requests' ? '⚡ Requests' : '🎭 Playwright'}
+                        </span>
+                        <span style="background: var(--bg-tertiary); color: var(--text-secondary); padding: 4px 8px; border-radius: var(--radius-sm); font-size: 12px;">
+                            ${item.links ? item.links.length + ' links' : '0 links'}
+                        </span>
+                        <span style="background: var(--bg-tertiary); color: var(--text-secondary); padding: 4px 8px; border-radius: var(--radius-sm); font-size: 12px;">
+                            ${item.images ? item.images.length + ' images' : '0 images'}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load from history
+        function loadFromHistory(index) {
+            const item = scrapingHistory[index];
+            urlInput.value = item.url;
+            displayResults(item);
+        }
+
+        // Show error
+        function showError(message) {
+            alert(message);
+        }
+
+        // Load history from localStorage
+        function loadHistory() {
+            const saved = localStorage.getItem('scrapingHistory');
+            if (saved) {
+                scrapingHistory = JSON.parse(saved);
+                updateHistoryDisplay();
+            }
+        }
+
+        // Initialize
+        loadHistory();
+
+        // Add enter key support
+        urlInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                startScrape();
+            }
+        });
+    </script>
+</body>
+</html>

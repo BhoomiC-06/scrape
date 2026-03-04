@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing Plans - ScrapeFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Light theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-glass: rgba(255, 255, 255, 0.8);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: #60a5fa;
+  --secondary: #10b981;
+  --accent: #8b5cf6;
+  --accent-light: #a78bfa;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --gradient-secondary: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+  --gradient-premium: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-glass: rgba(30, 41, 59, 0.8);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --border: #334155;
+  --border-light: #475569;
+  --primary: #60a5fa;
+  --primary-dark: #3b82f6;
+  --primary-light: #93c5fd;
+  --secondary: #34d399;
+  --accent: #a78bfa;
+  --accent-light: #c4b5fd;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Animated background */
+.bg-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  animation: gradientShift 10s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(2deg); }
+}
+
+[data-theme="dark"] .bg-gradient {
+  opacity: 0.4;
+}
+
+/* Layout */
+.pricing-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background: var(--bg-glass);
+  border-right: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.logo:hover .logo-icon {
+  transform: scale(1.05) rotate(5deg);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Navigation */
+.nav-menu {
+  padding: 16px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.nav-item:hover {
+  color: var(--primary);
+  background: var(--bg-secondary);
+  transform: translateX(4px);
+}
+
+.nav-item:hover::before {
+  opacity: 0.05;
+}
+
+.nav-item.active {
+  color: var(--primary);
+  background: var(--bg-secondary);
+  border-right: 3px solid var(--primary);
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 0;
+  position: relative;
+}
+
+/* Header */
+.header {
+  background: var(--bg-glass);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  padding: 16px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: all 0.3s ease;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-btn {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.action-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: scale(1.05);
+}
+
+.action-btn:hover::before {
+  opacity: 0.1;
+}
+
+.theme-toggle {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.theme-toggle:hover {
+  border-color: var(--primary);
+  transform: scale(1.05) rotate(180deg);
+}
+
+.theme-toggle:hover::before {
+  opacity: 0.1;
+}
+
+.theme-icon {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover .theme-icon {
+  transform: rotate(180deg);
+}
+
+/* Pricing Content */
+.pricing-content {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Hero Section */
+.pricing-hero {
+  text-align: center;
+  padding: 60px 0 40px;
+}
+
+.pricing-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+}
+
+.pricing-subtitle {
+  font-size: 20px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+
+.pricing-features {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.pricing-feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.feature-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Pricing Plans */
+.pricing-plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.pricing-card {
+  background: var(--bg-glass);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 32px;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.pricing-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+}
+
+.pricing-card:hover::before {
+  opacity: 0.05;
+}
+
+.pricing-card.featured {
+  border-color: var(--primary);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-xl);
+}
+
+.pricing-card.featured::before {
+  opacity: 0.1;
+}
+
+.pricing-card.featured:hover {
+  transform: scale(1.08) translateY(-8px);
+}
+
+.pricing-card.featured:hover::before {
+  opacity: 0.15;
+}
+
+.featured-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--gradient-primary);
+  color: white;
+  padding: 4px 12px;
+  border-radius: var(--radius-xl);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.plan-header {
+  text-align: center;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.plan-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.plan-price {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.plan-price span {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.plan-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Free Plan */
+.free-plan {
+  border-color: var(--border);
+}
+
+.free-plan .plan-price {
+  color: var(--text-secondary);
+}
+
+.free-plan .plan-price span {
+  color: var(--text-tertiary);
+}
+
+/* Pro Plan */
+.pro-plan {
+  border-color: var(--primary);
+}
+
+.pro-plan .plan-price {
+  color: var(--primary);
+}
+
+/* Enterprise Plan */
+.enterprise-plan {
+  border-color: var(--accent);
+}
+
+.enterprise-plan .plan-price {
+  color: var(--accent);
+}
+
+/* Plan Features */
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 32px;
+}
+
+.plan-feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.plan-feature:last-child {
+  border-bottom: none;
+}
+
+.feature-check {
+  width: 20px;
+  height: 20px;
+  background: var(--success);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.feature-x {
+  width: 20px;
+  height: 20px;
+  background: var(--danger);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.plan-action {
+  width: 100%;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.free-plan .plan-action {
+  color: var(--text-secondary);
+}
+
+.pro-plan .plan-action {
+  background: var(--gradient-primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.enterprise-plan .plan-action {
+  background: var(--gradient-secondary);
+  color: white;
+  border-color: var(--secondary);
+}
+
+.plan-action:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Comparison Table */
+.comparison-section {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 48px;
+  margin-bottom: 48px;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.comparison-section:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.comparison-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.comparison-table th {
+  background: var(--bg-tertiary);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.comparison-table td {
+  color: var(--text-secondary);
+}
+
+.comparison-table .check {
+  color: var(--success);
+  font-size: 18px;
+}
+
+.comparison-table .x {
+  color: var(--danger);
+  font-size: 18px;
+}
+
+/* FAQ Section */
+.faq-section {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 48px;
+  margin-bottom: 48px;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.faq-section:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.faq-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.faq-grid {
+  display: grid;
+  gap: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.faq-question {
+  padding: 20px 32px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+  background: var(--bg-tertiary);
+}
+
+.faq-question h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.faq-toggle {
+  width: 24px;
+  height: 24px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.faq-item.active .faq-toggle {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.faq-answer p {
+  padding: 0 32px 20px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 500px;
+}
+
+/* CTA Section */
+.cta-section {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 48px;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.cta-section:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.cta-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.cta-description {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-btn {
+  padding: 16px 32px;
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-lg);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.cta-btn.secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+}
+
+.cta-btn.secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .pricing-content {
+    padding: 20px;
+  }
+  
+  .pricing-plans {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .pricing-features {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .comparison-table {
+    font-size: 12px;
+  }
+  
+  .comparison-table th,
+  .comparison-table td {
+    padding: 12px 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-title {
+    font-size: 32px;
+  }
+  
+  .pricing-subtitle {
+    font-size: 18px;
+  }
+  
+  .pricing-features {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .pricing-card {
+    padding: 24px;
+  }
+  
+  .plan-name {
+    font-size: 20px;
+  }
+  
+  .plan-price {
+    font-size: 36px;
+  }
+  
+  .comparison-section,
+  .faq-section,
+  .cta-section {
+    padding: 32px 20px;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cta-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+
+<div class="pricing-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">🚀</div>
+        ScrapeFlow
+      </div>
+    </div>
+    
+    <nav class="nav-menu">
+      <a href="index.html" class="nav-item">
+        <span class="nav-icon">🏠</span>
+        Home
+      </a>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon">📊</span>
+        Dashboard
+      </a>
+      <a href="projects.html" class="nav-item">
+        <span class="nav-icon">📁</span>
+        Projects
+      </a>
+      <a href="profile.html" class="nav-item">
+        <span class="nav-icon">👤</span>
+        Profile
+      </a>
+      <a href="settings.html" class="nav-item">
+        <span class="nav-icon">⚙️</span>
+        Settings
+      </a>
+      <a href="analytics.html" class="nav-item">
+        <span class="nav-icon">📈</span>
+        Analytics
+      </a>
+      <a href="api.html" class="nav-item">
+        <span class="nav-icon">📚</span>
+        API Docs
+      </a>
+      <a href="pricing.html" class="nav-item active">
+        <span class="nav-icon">💳</span>
+        Pricing
+      </a>
+    </nav>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <h1 class="page-title">Pricing Plans</h1>
+        <div class="header-actions">
+          <button class="action-btn theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+            <span class="theme-icon" id="themeIcon">🌙</span>
+          </button>
+          <button class="action-btn" onclick="window.location.href='index.html'" title="Home">
+            <span>🏠</span>
+          </button>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Pricing Content -->
+    <div class="pricing-content">
+      <!-- Hero Section -->
+      <div class="pricing-hero">
+        <h1 class="pricing-title">Choose Your Plan</h1>
+        <p class="pricing-subtitle">
+          Simple, transparent pricing that scales with your needs. No hidden fees.
+        </p>
+        
+        <div class="pricing-features">
+          <div class="pricing-feature">
+            <span class="feature-check">✓</span>
+            No setup fees
+          </div>
+          <div class="pricing-feature">
+            <span class="feature-check">✓</span>
+            Cancel anytime
+          </div>
+          <div class="pricing-feature">
+            <span class="feature-check">✓</span>
+            24/7 support
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pricing Plans -->
+      <div class="pricing-plans">
+        <!-- Free Plan -->
+        <div class="pricing-card free-plan">
+          <div class="plan-header">
+            <h3 class="plan-name">Free</h3>
+            <div class="plan-price">
+              $0
+              <span>/month</span>
+            </div>
+            <p class="plan-description">Perfect for personal projects and testing</p>
+          </div>
+          
+          <ul class="plan-features">
+            <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              100 requests/month
+            </li>
+            <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              Basic scraping features
+            </li>
+            <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              Community support
+            </li>
+            <li class="plan-feature">
+              <span class="feature-x">✗</span>
+              API access
+            </li>
+            <li class="plan-feature">
+              <span class="feature-x">✗</span>
+              Advanced features
+            </li>
+            <li class="plan-feature">
+              <span class="feature-x">✗</span>
+              Priority support
+            </li>
+          </ul>
+          
+          <a href="#" class="plan-action" onclick="selectPlan('free')">
+            Start Free
+          </a>
+        </div>
+        
+        <!-- Pro Plan -->
+        <div class="pricing-card pro-plan featured">
+          <div class="featured-badge">Most Popular</div>
+          <div class="plan-header">
+            <h3 class="plan-name">Pro</h3>
+            <div class="plan-price">
+              $29
+              <span>/month</span>
+            </div>
+            <p class="plan-description">For professionals and growing teams</p>
+          </div>
+          
+          <ul class="plan-features">
+            <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              1,000 requests/month
+            </li>
+              <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              All scraping features
+            </li>
+            <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              API access
+            </li>
+              <li class="feature-check">✓</span>
+              Email support
+            </li>
+            <li class="feature-check">✓</span>
+              Advanced features
+            </li>
+            <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              Priority support
+            </li>
+            <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              Custom integrations
+            </li>
+          </ul>
+          
+          <a href="#" class="plan-action" onclick="selectPlan('pro')">
+            Start Pro Trial
+          </a>
+        </div>
+        
+        <!-- Enterprise Plan -->
+        <div class="pricing-card enterprise-plan">
+          <div class="plan-header">
+            <h3 class="plan-name">Enterprise</h3>
+            <div class="plan-price">
+              $99
+              <span>/month</span>
+            </div>
+            <p class="plan-description">For large organizations with custom needs</p>
+          </div>
+          
+          <ul class="plan-features">
+            <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              Unlimited requests
+            </li>
+            <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              All features included
+            </li>
+            <li class="plan-feature">
+              <span class="feature-check">✓</span>
+              Priority support
+            </li>
+            <li class="feature-check">✓</span>
+              Dedicated account manager
+            </li>
+            <li class="feature-check">✓</span>
+              Custom integrations
+            </li>
+            <li class="feature-check">✓</span>
+              White-label options
+            </li>
+            <li class="feature-check">✓</span>
+              SLA guarantee
+            </li>
+          </ul>
+          
+          <a href="#" class="plan-action" onclick="selectPlan('enterprise')">
+            Contact Sales
+          </a>
+        </div>
+      </div>
+      
+      <!-- Comparison Table -->
+      <div class="comparison-section">
+        <h2 class="comparison-title">
+          <span class="section-icon">⚖️</span>
+          Feature Comparison
+        </h2>
+        
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Free</th>
+              <th>Pro</th>
+              <th>Enterprise</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Monthly Requests</td>
+              <td>100</td>
+              <td>1,000</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>API Access</td>
+              <td><span class="x">✗</span></td>
+              <td><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>JavaScript Support</td>
+              <td><span class="x">✗</span></td>
+              <td><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Advanced Features</td>
+              <td><span class="x">✗</span></td>
+              <td><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Priority Support</td>
+              <td><span class="x">✗</span></td>
+              <td><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Custom Integrations</td>
+              <td><span class="x">✗</span></td>
+              <td><span class="x">✗</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>White Label</td>
+              <td><span class="x">✗</span></td>
+              <td><span class="x">✗</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>SLA Guarantee</td>
+              <td><span class="x">✗</span></td>
+              <td><span class="x">✗</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- FAQ Section -->
+      <div class="faq-section">
+        <h2 class="faq-title">
+          <span class="section-icon">❓</span>
+          Frequently Asked Questions
+        </h2>
+        
+        <div class="faq-grid">
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Can I change plans anytime?</h4>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>Yes! You can upgrade, downgrade, or cancel your subscription at any time. Changes take effect at the next billing cycle.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>What payment methods do you accept?</h4>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>We accept all major credit cards, PayPal, and bank transfers. Enterprise customers can also pay via invoice.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Is there a free trial?</h4>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>Yes! We offer a 14-day free trial for the Pro plan with full access to all features.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Can I get a refund?</h4>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>We offer a 30-day money-back guarantee for all paid plans. No questions asked.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Do you offer discounts?</h4>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>Yes! We offer 20% discount for annual billing and custom pricing for Enterprise plans.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- CTA Section -->
+      <div class="cta-section">
+        <h2 class="cta-title">Ready to Get Started?</h2>
+        <p class="cta-description">
+          Join thousands of professionals using ScrapeFlow for their web scraping needs
+        </p>
+        
+        <div class="cta-buttons">
+          <a href="signup.html" class="cta-btn">
+            <span>🚀</span>
+            Start Free Trial
+          </a>
+          <a href="#" class="cta-btn secondary" onclick="showContactForm()">
+            <span>💬</span>
+            Talk to Sales
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Theme management
+function initTheme() {
+  const savedTheme = localStorage.getItem('scrapeflow_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('scrapeflow_theme', newTheme);
+  updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+  const icon = document.getElementById('themeIcon');
+  icon.textContent = theme === 'light' ? '🌙' : '☀️';
+}
+
+// FAQ functionality
+function initFAQ() {
+  const faqItems = document.querySelectorAll('.faq-item');
+  
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    
+    question.addEventListener('click', () => {
+      const isActive = item.classList.contains('active');
+      
+      // Close all FAQ items
+      faqItems.forEach(faqItem => {
+        faqItem.classList.remove('active');
+      });
+      
+      // Open clicked item if it wasn't active
+      if (!isActive) {
+        item.classList.add('active');
+      }
+    });
+  });
+}
+
+// Plan selection
+function selectPlan(plan) {
+  console.log('Selected plan:', plan);
+  
+  // In a real app, this would redirect to signup or payment flow
+  if (plan === 'free') {
+    window.location.href = 'signup.html';
+  } else if (plan === 'pro') {
+    window.location.href = 'signup.html?plan=pro';
+  } else if (plan === 'enterprise') {
+    showContactForm();
+  }
+}
+
+// Contact form
+function showContactForm() {
+  console.log('Opening contact form');
+  // In a real app, this would open a contact modal or redirect to a contact page
+}
+
+// Initialize everything
+document.addEventListener('DOMContentLoaded', function() {
+  initTheme();
+  initFAQ();
+});
+
+// Mobile sidebar toggle
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('open');
+}
+
+// Add mobile menu button if needed
+if (window.innerWidth <= 1024) {
+  const header = document.querySelector('.header-content');
+  const menuBtn = document.createElement('button');
+  menuBtn.className = 'action-btn';
+  menuBtn.innerHTML = '☰';
+  menuBtn.onclick = toggleSidebar;
+  header.insertBefore(menuBtn, header.firstChild);
+}
+</script>
+</body>
+</html>

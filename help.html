@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help Center - ScrapeFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Light theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-glass: rgba(255, 255, 255, 0.8);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: #60a5fa;
+  --secondary: #10b981;
+  --accent: #8b5cf6;
+  --accent-light: #a78bfa;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --gradient-secondary: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-glass: rgba(30, 41, 59, 0.8);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --border: #334155;
+  --border-light: #475569;
+  --primary: #60a5fa;
+  --primary-dark: #3b82f6;
+  --primary-light: #93c5fd;
+  --secondary: #34d399;
+  --accent: #a78bfa;
+  --accent-light: #c4b5fd;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Animated background */
+.bg-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  animation: gradientShift 10s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(2deg); }
+}
+
+[data-theme="dark"] .bg-gradient {
+  opacity: 0.4;
+}
+
+/* Layout */
+.help-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background: var(--bg-glass);
+  border-right: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.logo:hover .logo-icon {
+  transform: scale(1.05) rotate(5deg);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Navigation */
+.nav-menu {
+  padding: 16px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.nav-item:hover {
+  color: var(--primary);
+  background: var(--bg-secondary);
+  transform: translateX(4px);
+}
+
+.nav-item:hover::before {
+  opacity: 0.05;
+}
+
+.nav-item.active {
+  color: var(--primary);
+  background: var(--bg-secondary);
+  border-right: 3px solid var(--primary);
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 0;
+  position: relative;
+}
+
+/* Header */
+.header {
+  background: var(--bg-glass);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  padding: 16px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: all 0.3s ease;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-bar {
+  position: relative;
+  width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  font-size: 16px;
+}
+
+.action-btn {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.action-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: scale(1.05);
+}
+
+.action-btn:hover::before {
+  opacity: 0.1;
+}
+
+.theme-toggle {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.theme-toggle:hover {
+  border-color: var(--primary);
+  transform: scale(1.05) rotate(180deg);
+}
+
+.theme-toggle:hover::before {
+  opacity: 0.1;
+}
+
+.theme-icon {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover .theme-icon {
+  transform: rotate(180deg);
+}
+
+/* Help Content */
+.help-content {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Hero Section */
+.help-hero {
+  text-align: center;
+  padding: 60px 0 40px;
+}
+
+.help-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+}
+
+.help-subtitle {
+  font-size: 20px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Categories */
+.categories-section {
+  margin-bottom: 48px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.category-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.category-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.category-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: white;
+  margin: 0 auto 16px;
+  transition: all 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: var(--shadow-lg);
+}
+
+.category-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.category-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.category-count {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+}
+
+/* FAQ Section */
+.faq-section {
+  margin-bottom: 48px;
+}
+
+.section-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.faq-grid {
+  display: grid;
+  gap: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.faq-question {
+  padding: 24px 32px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+  background: var(--bg-secondary);
+}
+
+.faq-question h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.faq-toggle {
+  width: 32px;
+  height: 32px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.faq-item.active .faq-toggle {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.faq-answer p {
+  padding: 0 32px 24px;
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 500px;
+}
+
+/* Guides Section */
+.guides-section {
+  margin-bottom: 48px;
+}
+
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.guide-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 32px;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.guide-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.guide-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.guide-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.guide-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.guide-description {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.guide-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+  color: var(--text-tertiary);
+}
+
+.guide-difficulty {
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  font-weight: 500;
+}
+
+.guide-difficulty.beginner {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.guide-difficulty.intermediate {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
+}
+
+.guide-difficulty.advanced {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+.guide-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Contact Section */
+.contact-section {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 48px;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.contact-section:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.contact-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.contact-description {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.contact-btn {
+  padding: 12px 24px;
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-lg);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.contact-btn.secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+}
+
+.contact-btn.secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .help-content {
+    padding: 20px;
+  }
+  
+  .search-bar {
+    width: 300px;
+  }
+  
+  .categories-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+  
+  .guides-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .help-title {
+    font-size: 32px;
+  }
+  
+  .help-subtitle {
+    font-size: 18px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+  }
+  
+  .contact-section {
+    padding: 32px 20px;
+  }
+  
+  .contact-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .contact-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .help-content {
+    padding: 16px;
+  }
+  
+  .category-card,
+  .guide-card {
+    padding: 20px;
+  }
+  
+  .faq-question {
+    padding: 20px 24px;
+  }
+  
+  .faq-answer p {
+    padding: 0 24px 20px;
+  }
+  
+  .search-bar {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+
+<div class="help-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">🚀</div>
+        ScrapeFlow
+      </div>
+    </div>
+    
+    <nav class="nav-menu">
+      <a href="index.html" class="nav-item">
+        <span class="nav-icon">🏠</span>
+        Home
+      </a>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon">📊</span>
+        Dashboard
+      </a>
+      <a href="projects.html" class="nav-item">
+        <span class="nav-icon">📁</span>
+        Projects
+      </a>
+      <a href="profile.html" class="nav-item">
+        <span class="nav-icon">👤</span>
+        Profile
+      </a>
+      <a href="settings.html" class="nav-item">
+        <span class="nav-icon">⚙️</span>
+        Settings
+      </a>
+      <a href="analytics.html" class="nav-item">
+        <span class="nav-icon">📈</span>
+        Analytics
+      </a>
+      <a href="api.html" class="nav-item">
+        <span class="nav-icon">📚</span>
+        API Docs
+      </a>
+      <a href="help.html" class="nav-item active">
+        <span class="nav-icon">❓</span>
+        Help Center
+      </a>
+    </nav>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <h1 class="page-title">Help Center</h1>
+        <div class="header-actions">
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Search for help articles..." id="searchInput">
+          </div>
+          <button class="action-btn theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+            <span class="theme-icon" id="themeIcon">🌙</span>
+          </button>
+          <button class="action-btn" onclick="window.location.href='index.html'" title="Home">
+            <span>🏠</span>
+          </button>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Help Content -->
+    <div class="help-content">
+      <!-- Hero Section -->
+      <div class="help-hero">
+        <h1 class="help-title">How Can We Help?</h1>
+        <p class="help-subtitle">
+          Find answers to common questions, learn about features, and get support for ScrapeFlow
+        </p>
+      </div>
+      
+      <!-- Categories -->
+      <div class="categories-section">
+        <div class="categories-grid">
+          <a href="#" class="category-card" onclick="showCategory('getting-started')">
+            <div class="category-icon">🚀</div>
+            <div class="category-title">Getting Started</div>
+            <div class="category-description">Learn the basics of web scraping with ScrapeFlow</div>
+            <div class="category-count">12 articles</div>
+          </a>
+          
+          <a href="#" class="category-card" onclick="showCategory('features')">
+            <div class="category-icon">⚡</div>
+            <div class="category-title">Features</div>
+            <div class="category-description">Explore powerful scraping capabilities and tools</div>
+            <div class="category-count">8 articles</div>
+          </a>
+          
+          <a href="#" class="category-card" onclick="showCategory('troubleshooting')">
+            <div class="category-icon">🔧</div>
+            <div class="category-title">Troubleshooting</div>
+            <div class="category-description">Solve common issues and problems</div>
+            <div class="category-count">15 articles</div>
+          </a>
+          
+          <a href="#" class="category-card" onclick="showCategory('api')">
+            <div class="category-icon">🔗</div>
+            <div class="category-title">API & Integration</div>
+            <div class="category-description">API documentation and integration guides</div>
+            <div class="category-count">6 articles</div>
+          </a>
+          
+          <a href="#" class="category-card" onclick="showCategory('billing')">
+            <div class="category-icon">💳</div>
+            <div class="category-title">Billing & Plans</div>
+            <div class="category-description">Pricing, subscriptions, and account management</div>
+            <div class="category-count">4 articles</div>
+          </a>
+          
+          <a href="#" class="category-card" onclick="showCategory('security')">
+            <div class="category-icon">🔒</div>
+            <div class="category-title">Security</div>
+            <div class="category-description">Data protection and privacy policies</div>
+            <div class="category-count">5 articles</div>
+          </a>
+        </div>
+      </div>
+      
+      <!-- FAQ Section -->
+      <div class="faq-section">
+        <h2 class="section-title">
+          <span class="section-icon">❓</span>
+          Frequently Asked Questions
+        </h2>
+        
+        <div class="faq-grid">
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>What is ScrapeFlow?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>ScrapeFlow is a professional web scraping platform that allows you to extract data from any website with ease. It provides both a user-friendly interface and powerful API for programmatic access.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>Is web scraping legal?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>Web scraping legality depends on various factors including the target website's terms of service, the type of data being collected, and applicable laws. Generally, scraping publicly available data for legitimate purposes is legal, but it's important to respect robots.txt files and comply with data protection regulations.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How does the dual-method approach work?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>ScrapeFlow automatically tries the fast Requests + BeautifulSoup method first for static content. If JavaScript rendering is needed, it falls back to Playwright for complete browser automation.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>What programming languages are supported?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>ScrapeFlow provides a REST API that can be used with any programming language. We also offer official SDKs for Python, JavaScript/Node.js, and Ruby.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>Can I scrape JavaScript-heavy websites?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>Yes! ScrapeFlow automatically detects when JavaScript rendering is needed and uses Playwright to handle complex web applications, SPAs, and dynamic content.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How do I avoid getting blocked?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>ScrapeFlow includes several features to avoid blocking: realistic User-Agent headers, configurable delays, proxy rotation support, and automatic retry logic. We also recommend respecting robots.txt files and implementing appropriate rate limiting.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Guides Section -->
+      <div class="guides-section">
+        <h2 class="section-title">
+          <span class="section-icon">📚</span>
+          Popular Guides
+        </h2>
+        
+        <div class="guides-grid">
+          <a href="#" class="guide-card">
+            <div class="guide-header">
+              <div class="guide-icon">🚀</div>
+              <div class="guide-title">Quick Start Guide</div>
+            </div>
+            <div class="guide-description">
+              Get up and running with ScrapeFlow in just 5 minutes. Learn the basics of web scraping and start extracting data from websites.
+            </div>
+            <div class="guide-meta">
+              <span class="guide-difficulty beginner">Beginner</span>
+              <span class="guide-time">⏱️ 5 min read</span>
+            </div>
+          </a>
+          
+          <a href="#" class="guide-card">
+            <div class="guide-header">
+              <div class="guide-icon">🔗</div>
+              <div class="guide-title">API Integration</div>
+            </div>
+            <div class="guide-description">
+              Learn how to integrate ScrapeFlow into your applications using our REST API and official SDKs.
+            </div>
+            <div class="guide-meta">
+              <span class="guide-difficulty intermediate">Intermediate</span>
+              <span class="guide-time">⏱️ 15 min read</span>
+            </div>
+          </a>
+          
+          <a href="#" class="guide-card">
+            <div class="guide-header">
+              <div class="guide-icon">🔒</div>
+              <div class="guide-title">Advanced Scraping</div>
+            </div>
+            <div class="guide-description">
+              Master advanced techniques like handling authentication, working with dynamic content, and optimizing performance.
+            </div>
+            <div class="guide-meta">
+              <span class="guide-difficulty advanced">Advanced</span>
+              <span class="guide-time">⏱️ 25 min read</span>
+            </div>
+          </a>
+          
+          <a href="#" class="guide-card">
+            <div class="guide-header">
+              <div class="guide-icon">📊</div>
+              <div class="guide-title">Data Analysis</div>
+            </div>
+            <div class="guide-description">
+              Learn how to process and analyze scraped data using popular tools and libraries.
+            </div>
+            <div class="guide-meta">
+              <span class="guide-difficulty intermediate">Intermediate</span>
+              <span class="guide-time">⏱️ 20 min read</span>
+            </div>
+          </a>
+          
+          <a href="#" class="guide-card">
+            <div class="guide-header">
+              <div class="guide-icon">🏢</div>
+              <div class="guide-title">E-commerce Scraping</div>
+            </div>
+            <div class="guide-description">
+              Specialized techniques for scraping product data, prices, and inventory from e-commerce websites.
+            </div>
+            <div class="guide-meta">
+              <span class="guide-difficulty intermediate">Intermediate</span>
+              <span class="guide-time">⏱️ 18 min read</span>
+            </div>
+          </a>
+          
+          <a href="#" class="guide-card">
+            <div class="guide-header">
+              <div class="guide-icon">📰</div>
+              <div class="guide-title">News & Media</div>
+            </div>
+            <div class="guide-description">
+              Extract articles, headlines, and media content from news websites and social media platforms.
+            </div>
+            <div class="guide-meta">
+              <span class="guide-difficulty beginner">Beginner</span>
+              <span class="guide-time">⏱️ 12 min read</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Contact Section -->
+      <div class="contact-section">
+        <h2 class="contact-title">Still Need Help?</h2>
+        <p class="contact-description">
+          Can't find what you're looking for? Our support team is here to help you succeed with web scraping.
+        </p>
+        
+        <div class="contact-buttons">
+          <a href="mailto:support@scrapeflow.com" class="contact-btn">
+            <span>📧</span>
+            Email Support
+          </a>
+          <a href="#" class="contact-btn secondary">
+            <span>💬</span>
+            Live Chat
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Theme management
+function initTheme() {
+  const savedTheme = localStorage.getItem('scrapeflow_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('scrapeflow_theme', newTheme);
+  updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+  const icon = document.getElementById('themeIcon');
+  icon.textContent = theme === 'light' ? '🌙' : '☀️';
+}
+
+// FAQ functionality
+function initFAQ() {
+  const faqItems = document.querySelectorAll('.faq-item');
+  
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    
+    question.addEventListener('click', () => {
+      const isActive = item.classList.contains('active');
+      
+      // Close all FAQ items
+      faqItems.forEach(faqItem => {
+        faqItem.classList.remove('active');
+      });
+      
+      // Open clicked item if it wasn't active
+      if (!isActive) {
+        item.classList.add('active');
+      }
+    });
+  });
+}
+
+// Search functionality
+function initSearch() {
+  const searchInput = document.getElementById('searchInput');
+  
+  searchInput.addEventListener('input', function(e) {
+    const query = e.target.value.toLowerCase();
+    
+    // Filter FAQ items
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+      const question = item.querySelector('h3').textContent.toLowerCase();
+      const answer = item.querySelector('.faq-answer p').textContent.toLowerCase();
+      
+      if (question.includes(query) || answer.includes(query)) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+    
+    // Filter guide cards
+    const guideCards = document.querySelectorAll('.guide-card');
+    guideCards.forEach(card => {
+      const title = card.querySelector('.guide-title').textContent.toLowerCase();
+      const description = card.querySelector('.guide-description').textContent.toLowerCase();
+      
+      if (title.includes(query) || description.includes(query)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    
+    // Filter category cards
+    const categoryCards = document.querySelectorAll('.category-card');
+    categoryCards.forEach(card => {
+      const title = card.querySelector('.category-title').textContent.toLowerCase();
+      const description = card.querySelector('.category-description').textContent.toLowerCase();
+      
+      if (title.includes(query) || description.includes(query)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+}
+
+// Category filtering
+function showCategory(category) {
+  console.log('Showing category:', category);
+  
+  // In a real app, this would filter and display relevant content
+  showNotification(`Showing ${category} articles`);
+}
+
+// Show notification
+function showNotification(message) {
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--gradient-primary);
+    color: white;
+    padding: 16px 24px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+  `;
+  notification.textContent = message;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.animation = 'slideOut 0.3s ease';
+    setTimeout(() => {
+      document.body.removeChild(notification);
+    }, 300);
+  }, 3000);
+}
+
+// Add animations
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+`;
+document.head.appendChild(style);
+
+// Initialize everything
+document.addEventListener('DOMContentLoaded', function() {
+  initTheme();
+  initFAQ();
+  initSearch();
+});
+
+// Mobile sidebar toggle
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('open');
+}
+
+// Add mobile menu button if needed
+if (window.innerWidth <= 1024) {
+  const header = document.querySelector('.header-content');
+  const menuBtn = document.createElement('button');
+  menuBtn.className = 'action-btn';
+  menuBtn.innerHTML = '☰';
+  menuBtn.onclick = toggleSidebar;
+  header.insertBefore(menuBtn, header.firstChild);
+}
+</script>
+</body>
+</html>

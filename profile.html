@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile - ScrapeFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Light theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-glass: rgba(255, 255, 255, 0.8);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --primary-light: #60a5fa;
+  --secondary: #10b981;
+  --accent: #8b5cf6;
+  --accent-light: #a78bfa;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --gradient-secondary: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-glass: rgba(30, 41, 59, 0.8);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --border: #334155;
+  --border-light: #475569;
+  --primary: #60a5fa;
+  --primary-dark: #3b82f6;
+  --primary-light: #93c5fd;
+  --secondary: #34d399;
+  --accent: #a78bfa;
+  --accent-light: #c4b5fd;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+/* Animated background */
+.bg-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  animation: gradientShift 10s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(2deg); }
+}
+
+[data-theme="dark"] .bg-gradient {
+  opacity: 0.4;
+}
+
+/* Layout */
+.profile-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background: var(--bg-glass);
+  border-right: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.logo:hover .logo-icon {
+  transform: scale(1.05) rotate(5deg);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Navigation */
+.nav-menu {
+  padding: 16px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.nav-item:hover {
+  color: var(--primary);
+  background: var(--bg-secondary);
+  transform: translateX(4px);
+}
+
+.nav-item:hover::before {
+  opacity: 0.05;
+}
+
+.nav-item.active {
+  color: var(--primary);
+  background: var(--bg-secondary);
+  border-right: 3px solid var(--primary);
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 0;
+  position: relative;
+}
+
+/* Header */
+.header {
+  background: var(--bg-glass);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  padding: 16px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: all 0.3s ease;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-btn {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.action-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: scale(1.05);
+}
+
+.action-btn:hover::before {
+  opacity: 0.1;
+}
+
+/* Profile Content */
+.profile-content {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Profile Header */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-bottom: 48px;
+  padding: 32px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.profile-header:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.profile-avatar-section {
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-xl);
+}
+
+.avatar-upload {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  border: 3px solid var(--bg-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.avatar-upload:hover {
+  background: var(--primary-dark);
+  transform: scale(1.1);
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.profile-email {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.profile-badges {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 6px 12px;
+  background: var(--gradient-primary);
+  color: white;
+  border-radius: var(--radius-xl);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge.premium {
+  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+}
+
+.badge.verified {
+  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+}
+
+/* Profile Sections */
+.profile-sections {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+}
+
+/* Form Section */
+.form-section {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 32px;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.form-section:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 16px;
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.form-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-select {
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+/* Stats Section */
+.stats-section {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 32px;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.stats-section:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.stats-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  border-color: var(--primary);
+  transform: translateX(4px);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.stat-details {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Settings Cards */
+.settings-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 32px;
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+  margin-top: 32px;
+}
+
+.settings-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-info {
+  flex: 1;
+}
+
+.setting-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.setting-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.setting-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  width: 48px;
+  height: 24px;
+  background: var(--border);
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggle-switch.active {
+  background: var(--primary);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.toggle-switch.active::after {
+  transform: translateX(24px);
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.theme-toggle:hover {
+  border-color: var(--primary);
+  transform: scale(1.05) rotate(180deg);
+}
+
+.theme-toggle:hover::before {
+  opacity: 0.1;
+}
+
+.theme-icon {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover .theme-icon {
+  transform: rotate(180deg);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .profile-sections {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    padding: 20px;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 24px;
+  }
+  
+  .profile-avatar {
+    margin: 0 auto 16px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .setting-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 16px 20px;
+  }
+  
+  .profile-content {
+    padding: 16px;
+  }
+  
+  .profile-header {
+    padding: 24px 20px;
+  }
+  
+  .form-section,
+  .stats-section,
+  .settings-card {
+    padding: 24px 20px;
+  }
+  
+  .profile-name {
+    font-size: 24px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+
+<div class="profile-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">🚀</div>
+        ScrapeFlow
+      </div>
+    </div>
+    
+    <nav class="nav-menu">
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon">📊</span>
+        Dashboard
+      </a>
+      <a href="index.html" class="nav-item">
+        <span class="nav-icon">🔍</span>
+        Scraping
+      </a>
+      <a href="projects.html" class="nav-item">
+        <span class="nav-icon">📁</span>
+        Projects
+      </a>
+      <a href="analytics.html" class="nav-item">
+        <span class="nav-icon">📈</span>
+        Analytics
+      </a>
+      <a href="api.html" class="nav-item">
+        <span class="nav-icon">🔗</span>
+        APIs
+      </a>
+      <a href="settings.html" class="nav-item">
+        <span class="nav-icon">⚙️</span>
+        Settings
+      </a>
+      <a href="profile.html" class="nav-item active">
+        <span class="nav-icon">👤</span>
+        Profile
+      </a>
+    </nav>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <h1 class="page-title">Profile</h1>
+        <div class="header-actions">
+          <button class="action-btn theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+            <span class="theme-icon" id="themeIcon">🌙</span>
+          </button>
+          <button class="action-btn" onclick="window.location.href='dashboard.html'">
+            <span>🏠</span>
+          </button>
+          <button class="action-btn" onclick="logout()">
+            <span>🚪</span>
+          </button>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Profile Content -->
+    <div class="profile-content">
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="profile-avatar-section">
+          <div class="profile-avatar" id="profileAvatar">JD</div>
+          <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
+            📷
+          </div>
+          <input type="file" id="avatarInput" style="display: none;" accept="image/*">
+        </div>
+        
+        <div class="profile-info">
+          <h2 class="profile-name" id="profileName">John Doe</h2>
+          <p class="profile-email" id="profileEmail">john.doe@example.com</p>
+          <div class="profile-badges">
+            <span class="badge premium">Premium</span>
+            <span class="badge verified">Verified</span>
+            <span class="badge">Pro User</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Profile Sections -->
+      <div class="profile-sections">
+        <!-- Form Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <span class="section-icon">✏️</span>
+            Edit Profile
+          </h3>
+          
+          <form id="profileForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="firstName">First Name</label>
+                <input type="text" class="form-input" id="firstName" value="John">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="lastName">Last Name</label>
+                <input type="text" class="form-input" id="lastName" value="Doe">
+              </div>
+              
+              <div class="form-group full-width">
+                <label class="form-label" for="email">Email Address</label>
+                <input type="email" class="form-input" id="email" value="john.doe@example.com">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone Number</label>
+                <input type="tel" class="form-input" id="phone" placeholder="+1 (555) 123-4567">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="company">Company</label>
+                <input type="text" class="form-input" id="company" placeholder="Your company">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="location">Location</label>
+                <input type="text" class="form-input" id="location" placeholder="City, Country">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="website">Website</label>
+                <input type="url" class="form-input" id="website" placeholder="https://yourwebsite.com">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="timezone">Timezone</label>
+                <select class="form-input form-select" id="timezone">
+                  <option>UTC-08:00 Pacific Time</option>
+                  <option>UTC-05:00 Eastern Time</option>
+                  <option>UTC+00:00 GMT</option>
+                  <option>UTC+01:00 Central European Time</option>
+                </select>
+              </div>
+              
+              <div class="form-group full-width">
+                <label class="form-label" for="bio">Bio</label>
+                <textarea class="form-input form-textarea" id="bio" placeholder="Tell us about yourself..."></textarea>
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+              <button type="button" class="btn btn-secondary" onclick="resetForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Stats Section -->
+        <div class="stats-section">
+          <h3 class="section-title">
+            <span class="section-icon">📊</span>
+            Account Stats
+          </h3>
+          
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-icon">🔍</div>
+              <div class="stat-details">
+                <div class="stat-value">2,847</div>
+                <div class="stat-label">Total Scrapes</div>
+              </div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-icon">📁</div>
+              <div class="stat-details">
+                <div class="stat-value">145</div>
+                <div class="stat-label">Projects</div>
+              </div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-icon">📈</div>
+              <div class="stat-details">
+                <div class="stat-value">98.7%</div>
+                <div class="stat-label">Success Rate</div>
+              </div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-icon">💾</div>
+              <div class="stat-details">
+                <div class="stat-value">1.2GB</div>
+                <div class="stat-label">Data Extracted</div>
+              </div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-icon">🔑</div>
+              <div class="stat-details">
+                <div class="stat-value">3</div>
+                <div class="stat-label">API Keys</div>
+              </div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-icon">👥</div>
+              <div class="stat-details">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Team Members</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Settings Card -->
+      <div class="settings-card">
+        <h3 class="section-title">
+          <span class="section-icon">⚙️</span>
+          Notification Settings
+        </h3>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-title">Email Notifications</div>
+            <div class="setting-description">Receive email updates about your scraping activities</div>
+          </div>
+          <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-title">Push Notifications</div>
+            <div class="setting-description">Get browser notifications for important events</div>
+          </div>
+          <div class="setting-control">
+            <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-title">Weekly Reports</div>
+            <div class="setting-description">Receive weekly summary reports of your scraping activity</div>
+          </div>
+          <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-title">Security Alerts</div>
+            <div class="setting-description">Get notified about security-related events</div>
+          </div>
+          <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Danger Zone -->
+      <div class="settings-card">
+        <h3 class="section-title">
+          <span class="section-icon">⚠️</span>
+          Danger Zone
+        </h3>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-title">Delete Account</div>
+            <div class="setting-description">Permanently delete your account and all associated data</div>
+          </div>
+          <div class="setting-control">
+            <button class="btn btn-secondary" style="background: var(--danger); color: white; border-color: var(--danger);" onclick="confirmDelete()">
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Theme management
+function initTheme() {
+  const savedTheme = localStorage.getItem('scrapeflow_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('scrapeflow_theme', newTheme);
+  updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+  const icon = document.getElementById('themeIcon');
+  icon.textContent = theme === 'light' ? '🌙' : '☀️';
+}
+
+// Load user data
+function loadUserData() {
+  const user = localStorage.getItem('scrapeflow_user');
+  if (user) {
+    const userData = JSON.parse(user);
+    
+    // Update profile display
+    const profileName = document.getElementById('profileName');
+    const profileEmail = document.getElementById('profileEmail');
+    const profileAvatar = document.getElementById('profileAvatar');
+    
+    if (userData.name) {
+      profileName.textContent = userData.name;
+      document.getElementById('firstName').value = userData.firstName || userData.name.split(' ')[0] || '';
+      document.getElementById('lastName').value = userData.lastName || userData.name.split(' ')[1] || '';
+    }
+    
+    if (userData.email) {
+      profileEmail.textContent = userData.email;
+      document.getElementById('email').value = userData.email;
+    }
+    
+    // Generate initials
+    if (userData.name) {
+      const names = userData.name.split(' ');
+      const initials = names.map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      profileAvatar.textContent = initials;
+    }
+  } else {
+    // Redirect to login if not logged in
+    window.location.href = 'login.html';
+  }
+}
+
+// Toggle switch
+function toggleSwitch(element) {
+  element.classList.toggle('active');
+}
+
+// Form submission
+document.getElementById('profileForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const firstName = document.getElementById('firstName').value;
+  const lastName = document.getElementById('lastName').value;
+  const email = document.getElementById('email').value;
+  
+  // Update user data
+  const userData = {
+    firstName: firstName,
+    lastName: lastName,
+    name: `${firstName} ${lastName}`,
+    email: email,
+    updatedAt: new Date().toISOString()
+  };
+  
+  localStorage.setItem('scrapeflow_user', JSON.stringify(userData));
+  
+  // Update display
+  document.getElementById('profileName').textContent = userData.name;
+  document.getElementById('profileEmail').textContent = userData.email;
+  document.getElementById('profileAvatar').textContent = (firstName[0] + lastName[0]).toUpperCase();
+  
+  // Show success message
+  showNotification('Profile updated successfully!');
+});
+
+// Reset form
+function resetForm() {
+  loadUserData();
+  showNotification('Changes discarded');
+}
+
+// Avatar upload
+document.getElementById('avatarInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      // In a real app, you'd upload this to a server
+      showNotification('Avatar uploaded successfully!');
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Delete account
+function confirmDelete() {
+  if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+    if (confirm('This will permanently delete all your data. Are you absolutely sure?')) {
+      localStorage.removeItem('scrapeflow_user');
+      window.location.href = 'login.html';
+    }
+  }
+}
+
+// Logout
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    localStorage.removeItem('scrapeflow_user');
+    window.location.href = 'login.html';
+  }
+}
+
+// Show notification
+function showNotification(message) {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--gradient-primary);
+    color: white;
+    padding: 16px 24px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+  `;
+  notification.textContent = message;
+  
+  document.body.appendChild(notification);
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    notification.style.animation = 'slideOut 0.3s ease';
+    setTimeout(() => {
+      document.body.removeChild(notification);
+    }, 300);
+  }, 3000);
+}
+
+// Add animations
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+`;
+document.head.appendChild(style);
+
+// Mobile sidebar toggle
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('open');
+}
+
+// Initialize everything
+document.addEventListener('DOMContentLoaded', function() {
+  initTheme();
+  loadUserData();
+  
+  // Add mobile menu button if needed
+  if (window.innerWidth <= 1024) {
+    const header = document.querySelector('.header-content');
+    const menuBtn = document.createElement('button');
+    menuBtn.className = 'action-btn';
+    menuBtn.innerHTML = '☰';
+    menuBtn.onclick = toggleSidebar;
+    header.insertBefore(menuBtn, header.firstChild);
+  }
+});
+</script>
+</body>
+</html>

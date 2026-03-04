@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScrapeFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080a0f;
+  --surface: #0f1117;
+  --surface2: #161920;
+  --surface3: #1c1f2a;
+  --border: #1a1e2c;
+  --border2: #222636;
+  --accent: #4d8ef5;
+  --accentg: #6ee7b7;
+  --accentp: #a78bfa;
+  --text: #e2e5f0;
+  --text2: #818aaa;
+  --text3: #464e6a;
+  --danger: #f87171;
+  --warn: #fbbf24;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Syne', sans-serif;
+  --r: 14px;
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --bg: #ffffff;
+  --surface: #f8fafc;
+  --surface2: #f1f5f9;
+  --surface3: #e2e8f0;
+  --border: #e2e8f0;
+  --border2: #cbd5e1;
+  --accent: #2563eb;
+  --accentg: #10b981;
+  --accentp: #8b5cf6;
+  --text: #1e293b;
+  --text2: #64748b;
+  --text3: #94a3b8;
+  --danger: #ef4444;
+  --warn: #f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+
+/* Grid BG */
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:44px 44px;opacity:.22;pointer-events:none;z-index:0;transition:opacity .3s}
+[data-theme="light"] body::before{opacity:.08}
+
+/* Glow orbs */
+body::after{content:'';position:fixed;top:-20%;left:-10%;width:50vw;height:50vw;
+  background:radial-gradient(circle,rgba(77,142,245,.07) 0%,transparent 70%);pointer-events:none;z-index:0;transition:opacity .3s}
+[data-theme="light"] body::after{opacity:.3}
+
+.app{position:relative;z-index:1;max-width:1020px;margin:0 auto;padding:0 24px 80px}
+
+/* ── NAV ── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--border);margin-bottom:44px}
+.logo{display:flex;align-items:center;gap:11px;font-size:1.25rem;font-weight:800;letter-spacing:-.03em}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accentg));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 0 20px rgba(77,142,245,.25)}
+.logo span{color:var(--text3);font-size:.75rem;font-weight:500;margin-left:2px}
+.nav-right{display:flex;align-items:center;gap:10px}
+.theme-toggle{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;color:var(--text2);font-size:16px}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.server-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);transition:background .3s;flex-shrink:0}
+.server-dot.online{background:var(--accentg);box-shadow:0 0 8px var(--accentg)}
+.server-dot.offline{background:var(--danger);box-shadow:0 0 8px var(--danger)}
+.server-label{font-family:var(--mono);font-size:.72rem;color:var(--text3)}
+.nav-tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px}
+.nav-tab{padding:7px 16px;border-radius:8px;font-size:.83rem;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--text2);font-family:var(--sans);transition:all .2s;display:flex;align-items:center;gap:6px}
+.nav-tab.active{background:var(--accent);color:#fff;box-shadow:0 0 16px rgba(77,142,245,.3)}
+.nav-tab:hover:not(.active){color:var(--text);background:var(--border)}
+
+/* ── VIEWS ── */
+#scraperView,#historyView{display:none}
+#scraperView.active,#historyView.active{display:block}
+
+/* ── URL BAR ── */
+.url-bar{display:flex;gap:12px;margin-bottom:36px}
+.url-input-wrap{flex:1;display:flex;align-items:center;gap:12px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--r);padding:0 20px;transition:all .2s}
+.url-input-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(77,142,245,.12)}
+.url-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--mono);font-size:.9rem;padding:17px 0}
+.url-input::placeholder{color:var(--text3)}
+.scrape-btn{background:linear-gradient(135deg,var(--accent),#3060c8);color:#fff;border:none;border-radius:var(--r);padding:0 30px;font-family:var(--sans);font-size:.95rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .25s;min-height:58px;white-space:nowrap;box-shadow:0 4px 20px rgba(77,142,245,.25);letter-spacing:-.01em}
+.scrape-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(77,142,245,.4)}
+.scrape-btn:active:not(:disabled){transform:translateY(0)}
+.scrape-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+/* ── SERVER NOTICE ── */
+.server-notice{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:12px;padding:14px 18px;font-size:.8rem;font-family:var(--mono);color:var(--text2);margin-bottom:28px;line-height:1.7;display:none}
+.server-notice.show{display:block}
+.server-notice code{background:var(--surface2);padding:2px 7px;border-radius:5px;color:var(--accentg)}
+
+/* ── INFO BAR ── */
+.info-bar{background:rgba(77,142,245,.07);border:1px solid rgba(77,142,245,.18);border-radius:10px;padding:11px 18px;font-size:.76rem;font-family:var(--mono);color:var(--text2);margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.info-bar b{color:var(--accentg)}
+.method-badge{background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.25);color:var(--accentp);padding:2px 9px;border-radius:20px;font-size:.7rem;font-weight:600}
+
+/* ── RESULT HEADER ── */
+.result-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;gap:16px}
+.site-title{font-size:1.65rem;font-weight:800;letter-spacing:-.04em;line-height:1.2}
+.site-url{font-family:var(--mono);font-size:.75rem;color:var(--text3);margin-top:5px}
+.export-btns{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.export-btn{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:8px 15px;font-family:var(--sans);font-size:.8rem;font-weight:700;color:var(--text2);cursor:pointer;transition:all .2s}
+.export-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;align-items:center;gap:14px;transition:border-color .2s}
+.stat-card:hover{border-color:var(--border2)}
+.stat-icon{width:42px;height:42px;background:var(--surface2);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:19px}
+.stat-label{font-size:.72rem;color:var(--text3);font-weight:700;margin-bottom:3px;letter-spacing:.04em;text-transform:uppercase}
+.stat-value{font-size:1.45rem;font-weight:800;letter-spacing:-.03em}
+
+/* ── TABS ── */
+.tabs-bar{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab-btn{padding:8px 16px;border-radius:8px;font-size:.81rem;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--text2);font-family:var(--sans);transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.tab-btn .badge{background:var(--border2);color:var(--text3);padding:1px 7px;border-radius:20px;font-size:.68rem;font-family:var(--mono)}
+.tab-btn.active{background:var(--surface2);color:var(--text);border:1px solid var(--border2)}
+.tab-btn.active .badge{background:var(--accent);color:#fff}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ── TEXT BOX ── */
+.text-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.text-box-header{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border)}
+.text-box-header span{font-size:.8rem;font-weight:700;color:var(--text2)}
+.copy-btn{display:flex;align-items:center;gap:5px;background:transparent;border:none;color:var(--text3);font-family:var(--sans);font-size:.78rem;font-weight:600;cursor:pointer;padding:5px 10px;border-radius:6px;transition:all .2s}
+.copy-btn:hover{color:var(--text);background:var(--border)}
+.extracted-text{padding:20px;font-family:var(--mono);font-size:.8rem;line-height:1.85;color:var(--text2);max-height:440px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+
+/* ── TABLES ── */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;max-height:520px;overflow-y:auto}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{background:var(--surface2);padding:11px 18px;text-align:left;font-size:.71rem;font-weight:800;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1}
+.data-table td{padding:10px 18px;border-bottom:1px solid var(--border);font-size:.82rem;vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--surface2)}
+.td-num{color:var(--text3);font-family:var(--mono);font-size:.75rem;width:42px}
+.td-text{font-weight:600;color:var(--text);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-url{font-family:var(--mono);font-size:.71rem;color:var(--text3);max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.open-link{background:none;border:none;color:var(--accent);cursor:pointer;padding:4px 6px;border-radius:6px;transition:background .2s;line-height:0}
+.open-link:hover{background:rgba(77,142,245,.12)}
+.meta-tag{display:inline-block;background:rgba(110,231,183,.07);border:1px solid rgba(110,231,183,.2);color:var(--accentg);font-family:var(--mono);font-size:.7rem;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.h-tag{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:var(--accentp)}
+
+/* ── IMAGES ── */
+.images-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+.img-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .2s}
+.img-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.img-card img{width:100%;height:115px;object-fit:cover;display:block;background:var(--surface2)}
+.img-card-info{padding:8px 10px;font-size:.68rem;color:var(--text3);font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── TABLE DATA ── */
+.tbl-wrap{overflow-x:auto;margin-bottom:16px}
+.extracted-table{border-collapse:collapse;font-family:var(--mono);font-size:.78rem;min-width:400px;width:100%}
+.extracted-table th{background:var(--surface2);padding:8px 14px;border:1px solid var(--border2);color:var(--text2);font-weight:700}
+.extracted-table td{padding:7px 14px;border:1px solid var(--border);color:var(--text2)}
+.extracted-table tr:nth-child(even) td{background:var(--surface2)}
+
+/* ── JSON-LD ── */
+.jsonld-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.jsonld-header{padding:10px 18px;border-bottom:1px solid var(--border);font-size:.78rem;color:var(--text2);font-weight:700}
+.jsonld-body{padding:16px 18px;font-family:var(--mono);font-size:.76rem;color:var(--accentg);white-space:pre;overflow-x:auto;max-height:300px;overflow-y:auto;line-height:1.7}
+
+/* ── LOADING ── */
+.loading-state{text-align:center;padding:56px 20px}
+.spinner{width:42px;height:42px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:.86rem;color:var(--text2);font-family:var(--mono);margin-bottom:22px}
+.method-steps{display:flex;flex-direction:column;gap:8px;align-items:flex-start;display:inline-flex;text-align:left}
+.method-row{font-size:.76rem;font-family:var(--mono);color:var(--text3);display:flex;align-items:center;gap:10px;padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;min-width:280px;transition:all .3s}
+.method-row.active{border-color:var(--accent);color:var(--text2);background:rgba(77,142,245,.06)}
+.method-row.ok{border-color:var(--accentg);color:var(--accentg);background:rgba(110,231,183,.05)}
+.method-row.fail{border-color:var(--danger);color:var(--danger);background:rgba(248,113,113,.05);opacity:.6}
+.m-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:all .3s}
+.method-row.active .m-dot{background:var(--accent);animation:pulse 1s infinite}
+.method-row.ok .m-dot{background:var(--accentg)}
+.method-row.fail .m-dot{background:var(--danger)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── ERROR ── */
+.error-box{background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.22);border-radius:var(--r);padding:22px;display:flex;gap:14px}
+.error-title{font-weight:800;color:var(--danger);font-size:.92rem;margin-bottom:8px}
+.error-msg{font-size:.8rem;color:var(--text2);font-family:var(--mono);line-height:1.7}
+.error-tips{margin-top:12px;padding-top:12px;border-top:1px solid rgba(248,113,113,.15);font-size:.76rem;color:var(--text3);line-height:2}
+
+/* ── EMPTY ── */
+.empty-state{text-align:center;padding:50px 20px;color:var(--text3);font-size:.86rem}
+
+/* ── HISTORY ── */
+.history-list{display:flex;flex-direction:column;gap:10px}
+.history-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;transition:all .2s}
+.history-item:hover{border-color:var(--accent);transform:translateX(5px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.history-left{flex:1;min-width:0}
+.history-title{font-weight:800;font-size:.92rem;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.history-url{font-family:var(--mono);font-size:.72rem;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.history-chips{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.chip{font-size:.68rem;padding:2px 8px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;color:var(--text3);font-family:var(--mono)}
+.history-time{font-size:.72rem;color:var(--text3);white-space:nowrap;font-family:var(--mono)}
+.clear-btn{background:transparent;border:1px solid var(--border2);border-radius:10px;padding:8px 16px;color:var(--danger);font-family:var(--sans);font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;display:block;margin-left:auto;margin-bottom:14px}
+.clear-btn:hover{background:rgba(248,113,113,.08);border-color:var(--danger)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+@media(max-width:640px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .url-bar{flex-direction:column}
+  .scrape-btn{justify-content:center}
+  .tabs-bar{gap:2px}
+  .tab-btn{padding:7px 10px;font-size:.76rem}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">
+      <div class="logo-icon">🌐</div>
+      ScrapeFlow <span>v2.0</span>
+    </div>
+    <div class="nav-right">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <span id="themeIcon">🌙</span>
+      </button>
+      <div class="server-dot" id="serverDot"></div>
+      <span class="server-label" id="serverLabel">checking server…</span>
+      <div class="nav-tabs">
+        <button class="nav-tab active" onclick="switchView('scraper')">🌐 Scraper</button>
+        <button class="nav-tab" onclick="switchView('history')">🕐 History</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SCRAPER VIEW -->
+  <div id="scraperView" class="active">
+
+    <!-- Server setup notice -->
+    <div class="server-notice" id="serverNotice">
+      ⚠️ Python backend is not running. Start it first:<br><br>
+      <code>pip install flask flask-cors requests beautifulsoup4 lxml playwright</code><br>
+      <code>playwright install chromium</code><br>
+      <code>python server.py</code><br><br>
+      Then refresh this page. The server runs at <code>http://localhost:5000</code>
+    </div>
+
+    <div class="url-bar">
+      <div class="url-input-wrap">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--text3);flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20"/></svg>
+        <input type="text" class="url-input" id="urlInput" placeholder="https://any-website.com" />
+      </div>
+      <button class="scrape-btn" id="scrapeBtn" onclick="startScrape()">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        Scrape
+      </button>
+    </div>
+
+    <div id="statusArea"></div>
+    <div id="resultArea" style="display:none"></div>
+  </div>
+
+  <!-- HISTORY VIEW -->
+  <div id="historyView">
+    <div id="historyContent"></div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:5000';
+let scrapeHistory = [];
+try { scrapeHistory = JSON.parse(localStorage.getItem('sf2_history') || '[]'); } catch(e){}
+let currentResult = null;
+
+// ── Theme management ───────────────────────────────────────────────────────────
+function initTheme() {
+  const savedTheme = localStorage.getItem('sf2_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('sf2_theme', newTheme);
+  updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+  const icon = document.getElementById('themeIcon');
+  icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+}
+
+// Initialize theme on page load
+initTheme();
+
+// ── Server health check ───────────────────────────────────────────────────────
+async function checkServer() {
+  const dot = document.getElementById('serverDot');
+  const lbl = document.getElementById('serverLabel');
+  const notice = document.getElementById('serverNotice');
+  try {
+    const r = await fetch(API + '/health', { signal: AbortSignal.timeout(3000) });
+    if (r.ok) {
+      dot.className = 'server-dot online';
+      lbl.textContent = 'server online';
+      notice.classList.remove('show');
+      return true;
+    }
+  } catch(e){}
+  dot.className = 'server-dot offline';
+  lbl.textContent = 'server offline';
+  notice.classList.add('show');
+  return false;
+}
+checkServer();
+setInterval(checkServer, 8000);
+
+// ── View switch ───────────────────────────────────────────────────────────────
+function switchView(v) {
+  document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.toggle('active',(i===0)===(v==='scraper')));
+  document.getElementById('scraperView').classList.toggle('active', v==='scraper');
+  document.getElementById('historyView').classList.toggle('active', v==='history');
+  if (v==='history') renderHistory();
+}
+
+// ── Main scrape ───────────────────────────────────────────────────────────────
+async function startScrape() {
+  let url = document.getElementById('urlInput').value.trim();
+  if (!url) return;
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+  const online = await checkServer();
+  if (!online) {
+    document.getElementById('statusArea').innerHTML = `
+      <div class="error-box">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        <div>
+          <div class="error-title">Python backend is not running</div>
+          <div class="error-msg">Please start the server first. See the instructions above.</div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const btn = document.getElementById('scrapeBtn');
+  const statusEl = document.getElementById('statusArea');
+  const resultEl = document.getElementById('resultArea');
+  btn.disabled = true;
+  resultEl.style.display = 'none';
+
+  statusEl.innerHTML = `
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <div class="loading-text" id="lt">Connecting to ${url}</div>
+      <div class="method-steps">
+        <div class="method-row active" id="m0"><div class="m-dot"></div>⚡ requests + BeautifulSoup (fast)</div>
+        <div class="method-row" id="m1"><div class="m-dot"></div>🎭 Playwright headless browser (JS support)</div>
+      </div>
+    </div>`;
+
+  // Animate: show requests is trying
+  await sleep(400);
+
+  try {
+    const res = await fetch(API + '/scrape', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    });
+
+    const json = await res.json();
+
+    if (!json.ok) {
+      throw new Error(json.error || 'Scrape failed');
+    }
+
+    const r = json.data;
+    currentResult = r;
+
+    // Animate method badge
+    if (r.method === 'requests') {
+      setMethod(0, 'ok'); setMethod(1, 'fail');
+    } else {
+      setMethod(0, 'fail'); setMethod(1, 'ok');
+    }
+    await sleep(500);
+
+    // Save history
+    scrapeHistory.unshift({ ...r, timestamp: new Date().toISOString() });
+    scrapeHistory = scrapeHistory.slice(0, 50);
+    try { localStorage.setItem('sf2_history', JSON.stringify(scrapeHistory)); } catch(e){}
+
+    statusEl.innerHTML = '';
+    resultEl.style.display = 'block';
+    renderResult(r);
+  } catch(e) {
+    statusEl.innerHTML = `
+      <div class="error-box">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        <div>
+          <div class="error-title">Scrape Failed</div>
+          <div class="error-msg">${esc(e.message)}</div>
+          <div class="error-tips">
+            💡 Tips:<br>
+            • The site may be behind a login / paywall (e.g., Netflix, banking sites)<br>
+            • Some sites use advanced bot detection (Cloudflare, Akamai)<br>
+            • Try adding <code>--headed</code> flag to Playwright for interactive mode<br>
+            • Ensure your internet connection is stable
+          </div>
+        </div>
+      </div>`;
+    resultEl.style.display = 'none';
+  }
+
+  btn.disabled = false;
+}
+
+function setMethod(i, state) {
+  const el = document.getElementById('m'+i);
+  if (el) el.className = 'method-row ' + state;
+}
+function sleep(ms) { return new Promise(r => setTimeout(r,ms)); }
+
+// ── Render result ─────────────────────────────────────────────────────────────
+function renderResult(r) {
+  const el = document.getElementById('resultArea');
+
+  const hasJsonLD = r.jsonld && r.jsonld.length > 0;
+  const hasTables = r.tables && r.tables.length > 0;
+
+  el.innerHTML = `
+    <div class="info-bar">
+      ✅ Scraped successfully via <b>${r.method}</b>
+      <span class="method-badge">${r.method === 'playwright' ? '🎭 Playwright (JS rendered)' : '⚡ requests + BS4 (static)'}</span>
+      &nbsp;·&nbsp; <b>${(r.word_count||0).toLocaleString()}</b> words &nbsp;·&nbsp; <b>${(r.characters||0).toLocaleString()}</b> chars
+    </div>
+
+    <div class="result-header">
+      <div style="min-width:0">
+        <div class="site-title">${esc(r.title)}</div>
+        <div class="site-url">${esc(r.final_url||r.url)}</div>
+      </div>
+      <div class="export-btns">
+        <button class="export-btn" onclick="exportJSON()">📄 JSON</button>
+        <button class="export-btn" onclick="exportCSV()">📊 CSV</button>
+        <button class="export-btn" onclick="exportTXT()">📝 TXT</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon">📄</div><div><div class="stat-label">Characters</div><div class="stat-value">${(r.characters||0).toLocaleString()}</div></div></div>
+      <div class="stat-card"><div class="stat-icon">🔗</div><div><div class="stat-label">Links</div><div class="stat-value">${(r.links||[]).length}</div></div></div>
+      <div class="stat-card"><div class="stat-icon">🖼</div><div><div class="stat-label">Images</div><div class="stat-value">${(r.images||[]).length}</div></div></div>
+      <div class="stat-card"><div class="stat-icon">🏷</div><div><div class="stat-label">Meta Tags</div><div class="stat-value">${(r.metas||[]).length}</div></div></div>
+    </div>
+
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('text')">📄 Text</button>
+      <button class="tab-btn" onclick="switchTab('links')">🔗 Links <span class="badge">${(r.links||[]).length}</span></button>
+      <button class="tab-btn" onclick="switchTab('images')">🖼 Images <span class="badge">${(r.images||[]).length}</span></button>
+      <button class="tab-btn" onclick="switchTab('headings')">📌 Headings <span class="badge">${(r.headings||[]).length}</span></button>
+      <button class="tab-btn" onclick="switchTab('meta')">🏷 Metadata</button>
+      ${hasTables ? `<button class="tab-btn" onclick="switchTab('tables')">📊 Tables <span class="badge">${r.tables.length}</span></button>` : ''}
+      ${hasJsonLD ? `<button class="tab-btn" onclick="switchTab('jsonld')">🧩 JSON-LD <span class="badge">${r.jsonld.length}</span></button>` : ''}
+    </div>
+
+    <!-- TEXT -->
+    <div id="tp-text" class="tab-panel active">
+      <div class="text-box">
+        <div class="text-box-header">
+          <span>Extracted Raw Text — ${(r.word_count||0).toLocaleString()} words</span>
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(currentResult.text)">📋 Copy All</button>
+        </div>
+        <div class="extracted-text">${esc(r.text||'') || '<em style="color:var(--text3)">No text content found</em>'}</div>
+      </div>
+    </div>
+
+    <!-- LINKS -->
+    <div id="tp-links" class="tab-panel">
+      ${(r.links||[]).length ? `
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>#</th><th>Link Text</th><th>URL</th><th></th></tr></thead>
+          <tbody>${(r.links||[]).map((l,i) => `<tr>
+            <td class="td-num">${i+1}</td>
+            <td class="td-text" title="${esc(l.text)}">${esc(l.text||'—')}</td>
+            <td class="td-url" title="${esc(l.href)}">${esc(l.href)}</td>
+            <td><button class="open-link" onclick="window.open(${JSON.stringify(l.href)},'_blank')">
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6v6m-11 5L21 3"/></svg>
+            </button></td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>` : `<div class="empty-state">No links found on this page</div>`}
+    </div>
+
+    <!-- IMAGES -->
+    <div id="tp-images" class="tab-panel">
+      ${(r.images||[]).length ? `
+      <div class="images-grid">${(r.images||[]).map(img => `
+        <div class="img-card">
+          <img src="${esc(img.src)}" alt="${esc(img.alt)}" loading="lazy" onerror="this.parentElement.style.display='none'">
+          <div class="img-card-info" title="${esc(img.alt||img.src)}">${esc((img.alt||img.src.split('/').pop()||'image').slice(0,36))}</div>
+        </div>`).join('')}
+      </div>` : `<div class="empty-state">No images found</div>`}
+    </div>
+
+    <!-- HEADINGS -->
+    <div id="tp-headings" class="tab-panel">
+      ${(r.headings||[]).length ? `
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Tag</th><th>Text</th><th></th></tr></thead>
+          <tbody>${(r.headings||[]).map(h => `<tr>
+            <td><span class="meta-tag h-tag">${esc(h.level)}</span></td>
+            <td style="color:var(--text);font-weight:600">${esc(h.text)}</td>
+            <td><button class="copy-btn" onclick="navigator.clipboard.writeText(${JSON.stringify(h.text)})">📋</button></td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>` : `<div class="empty-state">No headings found</div>`}
+    </div>
+
+    <!-- META -->
+    <div id="tp-meta" class="tab-panel">
+      ${(r.metas||[]).length ? `
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Property</th><th>Content</th><th></th></tr></thead>
+          <tbody>${(r.metas||[]).map(m => `<tr>
+            <td><span class="meta-tag">${esc(m.name)}</span></td>
+            <td style="font-family:var(--mono);font-size:.75rem;color:var(--text2);word-break:break-all">${esc(m.content)}</td>
+            <td><button class="copy-btn" onclick="navigator.clipboard.writeText(${JSON.stringify(m.content)})">📋</button></td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>` : `<div class="empty-state">No meta tags found</div>`}
+    </div>
+
+    <!-- TABLES -->
+    ${hasTables ? `
+    <div id="tp-tables" class="tab-panel">
+      ${r.tables.map((tbl, ti) => `
+        <div style="margin-bottom:20px">
+          <div style="font-size:.78rem;color:var(--text3);font-family:var(--mono);margin-bottom:8px;padding:0 2px">Table ${ti+1} — ${tbl.length} rows × ${(tbl[0]||[]).length} cols</div>
+          <div class="tbl-wrap">
+            <table class="extracted-table">
+              <thead><tr>${(tbl[0]||[]).map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead>
+              <tbody>${tbl.slice(1).map(row => `<tr>${row.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+            </table>
+          </div>
+        </div>`).join('')}
+    </div>` : ''}
+
+    <!-- JSON-LD -->
+    ${hasJsonLD ? `
+    <div id="tp-jsonld" class="tab-panel">
+      ${r.jsonld.map((j, i) => `
+        <div class="jsonld-block">
+          <div class="jsonld-header">Structured Data #${i+1} — ${j['@type'] || 'Unknown type'}</div>
+          <div class="jsonld-body">${esc(JSON.stringify(j, null, 2))}</div>
+        </div>`).join('')}
+    </div>` : ''}
+  `;
+}
+
+const ALL_TABS = ['text','links','images','headings','meta','tables','jsonld'];
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    const matches = b.getAttribute('onclick') === `switchTab('${id}')`;
+    b.classList.toggle('active', matches);
+  });
+  ALL_TABS.forEach(t => {
+    const p = document.getElementById('tp-' + t);
+    if (p) p.classList.toggle('active', t === id);
+  });
+}
+
+// ── Export ─────────────────────────────────────────────────────────────────────
+function exportJSON() {
+  if (!currentResult) return;
+  dlBlob(new Blob([JSON.stringify(currentResult, null, 2)], {type:'application/json'}), 'scrape.json');
+}
+function exportCSV() {
+  if (!currentResult) return;
+  const rows = [['type','field1','field2','field3']];
+  (currentResult.links||[]).forEach(l => rows.push(['link', l.href, l.text, '']));
+  (currentResult.images||[]).forEach(i => rows.push(['image', i.src, i.alt, `${i.width}x${i.height}`]));
+  (currentResult.metas||[]).forEach(m => rows.push(['meta', m.name, m.content, '']));
+  (currentResult.headings||[]).forEach(h => rows.push(['heading', h.level, h.text, '']));
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  dlBlob(new Blob([csv], {type:'text/csv'}), 'scrape.csv');
+}
+function exportTXT() {
+  if (!currentResult?.text) return;
+  dlBlob(new Blob([currentResult.text], {type:'text/plain'}), 'scrape.txt');
+}
+function dlBlob(blob, name) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+}
+
+// ── History ────────────────────────────────────────────────────────────────────
+function renderHistory() {
+  const el = document.getElementById('historyContent');
+  if (!scrapeHistory.length) {
+    el.innerHTML = `<div class="empty-state" style="padding:80px 0;font-size:1rem">No scrape history yet.</div>`;
+    return;
+  }
+  el.innerHTML = `
+    <button class="clear-btn" onclick="clearHistory()">🗑 Clear All</button>
+    <div class="history-list">
+      ${scrapeHistory.map((h,i) => `
+      <div class="history-item" onclick="loadHistory(${i})">
+        <div class="history-left">
+          <div class="history-title">${esc(h.title)}</div>
+          <div class="history-url">${esc(h.url)}</div>
+          <div class="history-chips">
+            <span class="chip">${h.method||'?'}</span>
+            <span class="chip">📄 ${(h.characters||0).toLocaleString()} chars</span>
+            <span class="chip">🔗 ${(h.links||[]).length} links</span>
+            <span class="chip">🖼 ${(h.images||[]).length} imgs</span>
+            <span class="chip">🏷 ${(h.metas||[]).length} meta</span>
+            ${(h.tables||[]).length ? `<span class="chip">📊 ${h.tables.length} tables</span>` : ''}
+          </div>
+        </div>
+        <div class="history-time">${timeAgo(h.timestamp)}</div>
+      </div>`).join('')}
+    </div>`;
+}
+function loadHistory(i) {
+  currentResult = scrapeHistory[i];
+  document.getElementById('urlInput').value = scrapeHistory[i].url;
+  switchView('scraper');
+  document.getElementById('statusArea').innerHTML = '';
+  document.getElementById('resultArea').style.display = 'block';
+  renderResult(scrapeHistory[i]);
+}
+function clearHistory() {
+  scrapeHistory = [];
+  try { localStorage.setItem('sf2_history','[]'); } catch(e){}
+  renderHistory();
+}
+function timeAgo(iso) {
+  const m = Math.floor((Date.now()-new Date(iso))/60000);
+  if (m<1) return 'just now';
+  if (m<60) return m+'m ago';
+  if (m<1440) return Math.floor(m/60)+'h ago';
+  return Math.floor(m/1440)+'d ago';
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key==='Enter') startScrape(); });
+</script>
+</body>
+</html>

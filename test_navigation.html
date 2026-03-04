@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Navigation Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-links { display: flex; gap: 10px; margin: 20px 0; }
+        .test-links a { padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .test-links a:hover { background: #0056b3; }
+        .status { padding: 10px; background: #f8f9fa; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Navigation Test Page</h1>
+    <div class="status" id="status">Testing navigation links...</div>
+    
+    <div class="test-links">
+        <a href="dashboard.html" onclick="testClick('dashboard')">Dashboard</a>
+        <a href="projects.html" onclick="testClick('projects')">Projects</a>
+        <a href="analytics.html" onclick="testClick('analytics')">Analytics</a>
+        <a href="api.html" onclick="testClick('api')">API</a>
+        <a href="settings.html" onclick="testClick('settings')">Settings</a>
+        <a href="profile.html" onclick="testClick('profile')">Profile</a>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        function testClick(page) {
+            const status = document.getElementById('status');
+            const results = document.getElementById('results');
+            
+            status.innerHTML = `Testing click on ${page}...`;
+            
+            // Test if the file exists
+            fetch(page + '.html')
+                .then(response => {
+                    if (response.ok) {
+                        results.innerHTML = `<div style="color: green;">✓ ${page}.html exists and is accessible</div>`;
+                    } else {
+                        results.innerHTML = `<div style="color: red;">✗ ${page}.html returned ${response.status}</div>`;
+                    }
+                })
+                .catch(error => {
+                    results.innerHTML = `<div style="color: red;">✗ Error accessing ${page}.html: ${error.message}</div>`;
+                });
+            
+            return false; // Prevent actual navigation for testing
+        }
+        
+        // Auto-test all links
+        window.onload = function() {
+            const links = ['dashboard', 'projects', 'analytics', 'api', 'settings', 'profile'];
+            let testResults = '';
+            
+            links.forEach(page => {
+                fetch(page + '.html')
+                    .then(response => {
+                        testResults += `<div style="color: ${response.ok ? 'green' : 'red'};">
+                            ${response.ok ? '✓' : '✗'} ${page}.html: ${response.status}
+                        </div>`;
+                        document.getElementById('results').innerHTML = testResults;
+                    })
+                    .catch(error => {
+                        testResults += `<div style="color: red;">✗ ${page}.html: ${error.message}</div>`;
+                        document.getElementById('results').innerHTML = testResults;
+                    });
+            });
+        };
+    </script>
+</body>
+</html>
