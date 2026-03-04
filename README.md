@@ -10,26 +10,6 @@ A full-featured web scraper with a Python backend (Flask) and beautiful dark UI.
 - 💾 Export to JSON, CSV, or TXT
 - 🕐 Scrape history (stored in browser localStorage)
 
-## Setup (one time)
-
-```bash
-# 1. Install Python dependencies
-pip install flask flask-cors requests beautifulsoup4 lxml playwright
-
-# 2. Install Playwright's headless browser
-playwright install chromium
-```
-
-## Run
-
-```bash
-# Start the backend server
-python server.py
-
-# Then open index.html in your browser (just double-click it)
-```
-
-The server runs at `http://localhost:5000`
 
 ## How it works
 
